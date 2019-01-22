@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+  <meta charset="UTF-8">
+  <title>マイニングボタン</title>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <script type="text/javascript" src="js/jsSHA/sha.js"></script>
+  <script type="text/javascript" src="js/jsSHA/sha256.js"></script>
+  <script type="text/javascript" src="js/mining.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+  </head>
+  <body>
+    <div>
+      body : <input type="text" name="body" value="xxxxxxxx"></input>
+    </div>
+    <div>
+      difficulty : <input type="number" name="difficulty" value="0"></input>
+    </div>
+    <div>
+      <button class="mining-button">Start Mining</button>
+      <h1 class="mining-msg" style="display:none">Mining...</h1>
+    </div>
+    <div class="nonce-data">
+      nonce:--------
+    </div>
+    <div class="hash-data">
+      hash:--------
+    </div>
+    <script type="text/javascript">
+    $(function() {
+      $('.mining-button').on('click',function(){
+        $(".hash-data").html('hash:--------');
+        $(".nonce-data").html('nonce:--------');
+         $(".mining-button").hide();
+         $(".mining-msg").show();
+        var newWorkerViaBlob = function(relativePath) {
+          var baseURL = window.location.href.replace(/\\/g, '/').replace(/\/[^\/]*$/, '/');
+          var array = ['importScripts("' + baseURL + relativePath + '");'];
+          var blob = new Blob(array, {type: 'text/javascript'});
+          var url = window.URL.createObjectURL(blob);
+          return new Worker(url);
+        };
+        let worker = newWorkerViaBlob('js/worker.js');
+        let obj = {
+          body   : $('[name="body"]').val(),
+          dif : $('[name="difficulty"]').val(),
+          url: document.location.protocol + '//' + document.location.host
+        };
+        worker.addEventListener('message', function(e){
+          $(".hash-data").html('hash:'+e.data.hash);
+          $(".nonce-data").html('nonce:'+e.data.nonce);
+          $(".mining-button").show();
+          $(".mining-msg").hide();
+        },false);
+        worker.postMessage(obj);
+      });
+    });
+    </script>
+  </body>
+</html>
