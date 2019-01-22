@@ -1,7 +1,7 @@
 self.addEventListener('message', function(e){
-  importScripts(e.data.url+'/sha.js');
-  importScripts(e.data.url+'/sha256.js');
-  importScripts(e.data.url+'/mining.js');
+  importScripts('sha.js');
+  importScripts('sha256.js');
+  importScripts('mining.js');
   let hash="";
   let nonce=0;
   do{
