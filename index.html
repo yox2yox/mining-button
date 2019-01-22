@@ -28,19 +28,12 @@
     </div>
     <script type="text/javascript">
     $(function() {
-      $('.mining-button').on('click',function(){
+        $('.mining-button').on('click',function(){
         $(".hash-data").html('hash:--------');
         $(".nonce-data").html('nonce:--------');
-         $(".mining-button").hide();
-         $(".mining-msg").show();
-        var newWorkerViaBlob = function(relativePath) {
-          var baseURL = window.location.href.replace(/\\/g, '/').replace(/\/[^\/]*$/, '/');
-          var array = ['importScripts("' + baseURL + relativePath + '");'];
-          var blob = new Blob(array, {type: 'text/javascript'});
-          var url = window.URL.createObjectURL(blob);
-          return new Worker(url);
-        };
-        let worker = newWorkerViaBlob('js/worker.js');
+        $(".mining-button").hide();
+        $(".mining-msg").show();
+        let worker = new Worker('js/worker.js');
         let obj = {
           body   : $('[name="body"]').val(),
           dif : $('[name="difficulty"]').val(),
